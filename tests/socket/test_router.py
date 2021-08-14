@@ -1,0 +1,68 @@
+
+import pytest
+from foreverbull_core.models.base import Base
+from foreverbull_core.models.socket import Request, Response
+from foreverbull_core.socket.router import MessageRouter, TaskAlreadyExists
+from unittest.mock import create_autospec
+
+
+class DemoModel(Base):
+    name: str
+
+def demo_function():
+    pass
+
+def demo_function_with_model(demo: DemoModel):
+    pass
+
+def test_add_route():
+    router = MessageRouter()
+    router.add_route(demo_function, "demo")
+
+    assert "demo" in router._routes
+    assert demo_function == router._routes["demo"].func
+
+def test_add_route_with_model():
+    router = MessageRouter()
+    router.add_route(demo_function_with_model, "demo", DemoModel)
+
+    assert "demo" in router._routes
+    assert DemoModel == router._routes["demo"].model
+
+def test_add_route_already_exists():
+    router = MessageRouter()
+    router.add_route(demo_function_with_model, "demo", DemoModel)
+    with pytest.raises(TaskAlreadyExists, match="demo already registered"):
+        router.add_route(demo_function_with_model, "demo", DemoModel)
+
+def test_call():
+    mock_func = create_autospec(demo_function)
+
+    router = MessageRouter()
+    router.add_route(mock_func, "demo")
+    
+    req = Request(task="demo")
+    router(req.dump())
+    mock_func.assert_called_once()
+
+def test_call_with_model():
+    mock_func = create_autospec(demo_function_with_model)
+    
+    router = MessageRouter()
+    router.add_route(mock_func, "demo", DemoModel)
+
+    data = DemoModel(name="best")
+    req = Request(task="demo", data=data)
+    router(req.dump())
+    mock_func.assert_called_once()
+    mock_func.assert_called_once_with(data)
+
+
+def test_call_not_exists():
+    router = MessageRouter()
+
+    req = Request(task="demo")
+    rsp = router(req.dump())
+
+    rsp = Response.load(rsp)
+    assert rsp.error == "task not found"
