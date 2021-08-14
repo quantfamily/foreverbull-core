@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 import json
 
+
 class Base(BaseModel):
     @classmethod
     def load(cls, data):

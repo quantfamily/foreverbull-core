@@ -1,4 +1,3 @@
-
 import pytest
 from foreverbull_core.models.base import Base
 from foreverbull_core.models.socket import Request, Response
@@ -9,11 +8,14 @@ from unittest.mock import create_autospec
 class DemoModel(Base):
     name: str
 
+
 def demo_function():
     pass
 
+
 def demo_function_with_model(demo: DemoModel):
     pass
+
 
 def test_add_route():
     router = MessageRouter()
@@ -22,6 +24,7 @@ def test_add_route():
     assert "demo" in router._routes
     assert demo_function == router._routes["demo"].func
 
+
 def test_add_route_with_model():
     router = MessageRouter()
     router.add_route(demo_function_with_model, "demo", DemoModel)
@@ -29,25 +32,28 @@ def test_add_route_with_model():
     assert "demo" in router._routes
     assert DemoModel == router._routes["demo"].model
 
+
 def test_add_route_already_exists():
     router = MessageRouter()
     router.add_route(demo_function_with_model, "demo", DemoModel)
     with pytest.raises(TaskAlreadyExists, match="demo already registered"):
         router.add_route(demo_function_with_model, "demo", DemoModel)
 
+
 def test_call():
     mock_func = create_autospec(demo_function)
 
     router = MessageRouter()
     router.add_route(mock_func, "demo")
-    
+
     req = Request(task="demo")
     router(req.dump())
     mock_func.assert_called_once()
 
+
 def test_call_with_model():
     mock_func = create_autospec(demo_function_with_model)
-    
+
     router = MessageRouter()
     router.add_route(mock_func, "demo", DemoModel)
 

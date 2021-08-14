@@ -5,6 +5,7 @@ from foreverbull_core.http.http import HTTPClient
 from foreverbull_core.http.service import Service
 from foreverbull_core.socket.client import SocketClient
 
+
 def test_broker():
     host = "my_host.com"
     service_id = "my_service_id"
@@ -18,6 +19,7 @@ def test_broker():
     assert type(broker.http) == HTTPClient
     assert type(broker.socket) == SocketClient
 
+
 def test_mark_as_online():
     host = "my_host.com"
     service_id = "my_service_id"
@@ -29,6 +31,7 @@ def test_mark_as_online():
 
     update_service.assert_called_once_with(service_id, instance_id, local_host, mock.ANY, True)
 
+
 def test_mark_as_offline():
     host = "my_host.com"
     service_id = "my_service_id"
@@ -39,4 +42,3 @@ def test_mark_as_offline():
         broker.mark_as_offline()
 
     update_service.assert_called_once_with(service_id, instance_id, local_host, mock.ANY, False)
-

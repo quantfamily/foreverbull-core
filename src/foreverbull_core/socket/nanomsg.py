@@ -3,7 +3,7 @@ from pynng import Pub0, Rep0, Req0, exceptions
 from .exceptions import SocketClosed, SocketTimeout
 
 
-class NanomsgSocket():
+class NanomsgSocket:
     SOCKETS = {"publisher": Pub0, "replier": Rep0, "requester": Req0}
 
     def __init__(self, configuration):
@@ -18,7 +18,7 @@ class NanomsgSocket():
         self._socket.send_timeout = configuration.send_timeout
         if configuration.listen and configuration.port == 0:
             # Pretty hacky way to find the port that OS randomly assigns when it's orginally set as 0
-            configuration.port = int(self._socket.listeners[0].url.split(':')[-1])
+            configuration.port = int(self._socket.listeners[0].url.split(":")[-1])
 
     def url(self):
         if self._configuration.listen:

@@ -9,8 +9,10 @@ ROUTE = namedtuple("route", "func, route, model")
 class TaskNotFoundError(Exception):
     pass
 
+
 class TaskAlreadyExists(Exception):
     pass
+
 
 class MessageRouter:
     def __init__(self):

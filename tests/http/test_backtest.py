@@ -16,6 +16,7 @@ def backtest_session():
 
     return setup
 
+
 def test_list_backtests(backtest_session):
     backtest, adapter = backtest_session()
     adapter.register_uri("GET", "http://127.0.0.1:8080/backtests", json=[])

@@ -1,6 +1,10 @@
 from foreverbull_core.models.socket import SocketConfig
-from typing import List, Optional
+from typing import List
 from foreverbull_core.models.base import Base
+
+
+class Session(Base):
+    id: str
 
 
 class Info(Base):

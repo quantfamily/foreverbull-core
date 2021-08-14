@@ -1,6 +1,3 @@
-import os
-import socket
-
 from foreverbull_core.http import HTTPClient
 from foreverbull_core.socket.client import SocketClient
 
@@ -15,7 +12,11 @@ class Broker:
         self.socket = SocketClient(self._local_host)
 
     def mark_as_online(self):
-        self.http.service.update_instance(self._service_id, self._instance_id, self._local_host, self.socket.config.port, True)
+        self.http.service.update_instance(
+            self._service_id, self._instance_id, self._local_host, self.socket.config.port, True
+        )
 
     def mark_as_offline(self):
-        self.http.service.update_instance(self._service_id, self._instance_id, self._local_host, self.socket.config.port, False)
+        self.http.service.update_instance(
+            self._service_id, self._instance_id, self._local_host, self.socket.config.port, False
+        )

@@ -4,6 +4,7 @@ from foreverbull_core.http import RequestError
 from foreverbull_core.http.service import Service
 import pytest
 
+
 @pytest.fixture(scope="function")
 def service_session():
     def setup():
@@ -14,6 +15,7 @@ def service_session():
         return service, adapter
 
     return setup
+
 
 def test_list_services(service_session):
     service, adapter = service_session()
