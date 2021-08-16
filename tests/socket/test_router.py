@@ -47,8 +47,10 @@ def test_call():
     router.add_route(mock_func, "demo")
 
     req = Request(task="demo")
-    router(req.dump())
+    rsp = router(req)
+
     mock_func.assert_called_once()
+    assert type(rsp) == Response
 
 
 def test_call_with_model():
@@ -59,16 +61,18 @@ def test_call_with_model():
 
     data = DemoModel(name="best")
     req = Request(task="demo", data=data)
-    router(req.dump())
+    rsp = router(req)
+
     mock_func.assert_called_once()
     mock_func.assert_called_once_with(data)
+    assert type(rsp) == Response
 
 
 def test_call_not_exists():
     router = MessageRouter()
 
     req = Request(task="demo")
-    rsp = router(req.dump())
+    rsp = router(req)
 
-    rsp = Response.load(rsp)
     assert rsp.error == "task not found"
+    assert type(rsp) == Response

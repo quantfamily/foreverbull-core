@@ -4,14 +4,12 @@ import pkg_resources
 import os
 from setuptools import find_packages
 
-
-print(os.listdir())
 with pathlib.Path("requirements.txt").open() as requirements_txt:
     install_requires = [str(requirement) for requirement in pkg_resources.parse_requirements(requirements_txt)]
 
 setup(
     name="foreverbull-core",
-    version="0.0.0",
+    version="0.0.2",
     description="Core Python functionality for Foreverbull",
     author="Henrik Nilsson",
     author_email="henrik@lhjnilsson.com",

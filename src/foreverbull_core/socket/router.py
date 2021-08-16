@@ -19,10 +19,9 @@ class MessageRouter:
         self._logger = logging.getLogger(__name__)
         self._routes = {}
 
-    def __call__(self, data):
-        request = Request.load(data)
+    def __call__(self, request):
         if request.task not in self._routes:
-            return Response(task=request.task, error=str(TaskNotFoundError("task not found"))).dump()
+            return Response(task=request.task, error=str(TaskNotFoundError("task not found")))
         route = self._routes[request.task]
         try:
             if route.model is None:
@@ -30,12 +29,11 @@ class MessageRouter:
             else:
                 model_data = route.model.load(request.data)
                 data = route.func(model_data)
-            response = Response(task=request.task, data=data)
+            return Response(task=request.task, data=data)
         except Exception as exc:
             self._logger.error(f"Error calling task: {request.task}")
             self._logger.error(exc, exc_info=True)
-            response = Response(task=request.task, error=str(exc))
-        return response.dump()
+            return Response(task=request.task, error=str(exc))
 
     def add_route(self, function, route, model=None):
         if route in self._routes:

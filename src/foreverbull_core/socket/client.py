@@ -7,6 +7,9 @@ class SocketClient:
         self.config = SocketConfig(socket_type="replier", host=host)
         self._socket = NanomsgSocket(self.config)
 
+    def url(self):
+        return f"tcp://{self.config.host}:{self.config.port}"
+
     def send(self, message):
         self._socket.send(message.dump())
 

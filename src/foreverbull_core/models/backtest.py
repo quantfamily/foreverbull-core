@@ -7,7 +7,7 @@ class Session(Base):
     id: str
 
 
-class Info(Base):
+class BacktestSockets(Base):
     main: SocketConfig
     feed: SocketConfig
     broker: SocketConfig
