@@ -36,7 +36,7 @@ def test_default_configuration():
     c = SocketConfig(socket_type="demo")
     expected = {
         "socket_type": "demo",
-        "host": socket.gethostname(),
+        "host": socket.gethostbyname(socket.gethostname()),
         "port": 0,
         "listen": True,
         "recv_timeout": 5000,
