@@ -1,5 +1,5 @@
 from collections import namedtuple
-from foreverbull_core.models.socket import Request, Response
+from foreverbull_core.models.socket import Response
 
 import logging
 

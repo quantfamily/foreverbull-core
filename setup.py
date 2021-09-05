@@ -9,7 +9,7 @@ with pathlib.Path("requirements.txt").open() as requirements_txt:
 
 setup(
     name="foreverbull-core",
-    version="0.0.2",
+    version="0.0.7",
     description="Core Python functionality for Foreverbull",
     author="Henrik Nilsson",
     author_email="henrik@lhjnilsson.com",
