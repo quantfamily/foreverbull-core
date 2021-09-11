@@ -6,10 +6,9 @@ from foreverbull_core.models.base import Base
 class Database(Base):
     user: str
     password: str
-    hostname: str
+    netloc: str
     port: int
-    db_name: str
-    dialect: str
+    dbname: str
 
 
 class Parameter(Base):

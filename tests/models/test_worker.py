@@ -5,10 +5,9 @@ def test_database():
     database = Database(
         user="test_user",
         password="test_password",
-        hostname="test_hostname",
+        netloc="test_hostname",
         port=1337,
-        db_name="test_name",
-        dialect="ofc_postgres",
+        dbname="test_name",
     )
 
     data = database.dump()
@@ -28,10 +27,9 @@ def test_worker_configuration():
     database = Database(
         user="test_user",
         password="test_password",
-        hostname="test_hostname",
+        netloc="test_netloc",
         port=1337,
-        db_name="test_name",
-        dialect="ofc_postgres",
+        dbname="dbname",
     )
     parameter1 = Parameter(key="test_key", value=1, default=11)
     parameter2 = Parameter(key="test_key2", value=2, default=22)
