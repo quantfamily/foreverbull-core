@@ -1,4 +1,5 @@
 import requests
+
 from .exceptions import RequestError
 
 

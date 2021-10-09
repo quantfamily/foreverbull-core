@@ -1,35 +1,35 @@
-from pynng import Pub0, Rep0, Req0, exceptions
+from pynng import exceptions
+
+from foreverbull_core.models.socket import SocketConfig
 
 from .exceptions import SocketClosed, SocketTimeout
 
 
 class NanomsgSocket:
-    SOCKETS = {"publisher": Pub0, "replier": Rep0, "requester": Req0}
-
-    def __init__(self, configuration):
+    def __init__(self, config: SocketConfig):
         self._socket = None
-        self._configuration = configuration
-        socket = self.SOCKETS[configuration.socket_type]
-        if configuration.listen:
-            self._socket = socket(listen=f"tcp://{configuration.host}:{configuration.port}")
+        self._config = config
+        self._socket = self._config.socket_type.value
+        if self._config.listen:
+            self._socket = self._config.socket_type.value(listen=f"tcp://{self._config.host}:{self._config.port}")
         else:
-            self._socket = socket(dial=f"tcp://{configuration.host}:{configuration.port}")
-        self._socket.recv_timeout = configuration.recv_timeout
-        self._socket.send_timeout = configuration.send_timeout
-        if configuration.listen and configuration.port == 0:
+            self._socket = self._config.socket_type.value(dial=f"tcp://{self._config.host}:{self._config.port}")
+        self._socket.recv_timeout = self._config.recv_timeout
+        self._socket.send_timeout = self._config.send_timeout
+        if self._config.listen and self._config.port == 0:
             # Pretty hacky way to find the port that OS randomly assigns when it's orginally set as 0
-            configuration.port = int(self._socket.listeners[0].url.split(":")[-1])
+            print(self._socket.listeners, flush=True)
+            print(dir(self._socket))
+            self._config.port = int(self._socket.listeners[0].url.split(":")[-1])
 
     def url(self):
-        if self._configuration.listen:
+        if self._config.listen:
             return self._socket.listeners[0].url
         return self._socket.dialers[0].url
 
     def send(self, data):
         try:
             return self._socket.send(data)
-        except exceptions.Timeout as exc:
-            raise SocketTimeout(exc)
         except exceptions.Closed as exc:
             raise SocketClosed(exc)
 

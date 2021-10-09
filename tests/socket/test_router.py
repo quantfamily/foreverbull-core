@@ -1,8 +1,10 @@
+from unittest.mock import create_autospec
+
 import pytest
+
 from foreverbull_core.models.base import Base
 from foreverbull_core.models.socket import Request, Response
 from foreverbull_core.socket.router import MessageRouter, TaskAlreadyExists
-from unittest.mock import create_autospec
 
 
 class DemoModel(Base):
@@ -15,6 +17,10 @@ def demo_function():
 
 def demo_function_with_model(demo: DemoModel):
     pass
+
+
+def error_function():
+    raise Exception("this does not work")
 
 
 def test_add_route():
@@ -76,3 +82,13 @@ def test_call_not_exists():
 
     assert rsp.error == "task not found"
     assert type(rsp) == Response
+
+
+def test_call_error_function():
+    router = MessageRouter()
+    router.add_route(error_function, "do_error")
+
+    req = Request(task="do_error")
+    rsp = router(req)
+    assert rsp.error is not None
+    assert rsp.error == "Exception('this does not work')"

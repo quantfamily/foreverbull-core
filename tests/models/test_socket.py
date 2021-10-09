@@ -1,4 +1,4 @@
-from foreverbull_core.models.socket import Request, Response, SocketConfig
+from foreverbull_core.models.socket import Request, Response, SocketConfig, SocketType
 
 
 def test_socket_config():
@@ -7,7 +7,7 @@ def test_socket_config():
     data = config.dump()
     loaded = SocketConfig.load(data)
     assert config == loaded
-    assert loaded.socket_type == "requester"
+    assert loaded.socket_type == SocketType.REQUESTER
     assert loaded.port == 0
     assert loaded.listen
     assert loaded.recv_timeout == 5000
@@ -16,7 +16,7 @@ def test_socket_config():
 
 def test_request():
     config = SocketConfig(socket_type="requester")
-    request = Request(task="demo", data=config)
+    request = Request(task="demo", data=config.dict())
 
     data = request.dump()
     loaded = Request.load(data)
@@ -25,7 +25,7 @@ def test_request():
 
 def test_response():
     config = SocketConfig(socket_type="requester")
-    response = Response(task="demo", data=config, error=None)
+    response = Response(task="demo", data=config.dict(), error=None)
 
     data = response.dump()
     loaded = Response.load(data)

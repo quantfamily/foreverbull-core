@@ -1,8 +1,9 @@
-import requests_mock
+import pytest
 import requests
+import requests_mock
+
 from foreverbull_core.http import RequestError
 from foreverbull_core.http.service import Service
-import pytest
 
 
 @pytest.fixture(scope="function")

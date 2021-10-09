@@ -1,10 +1,12 @@
-from foreverbull_core.socket.exceptions import SocketClosed, SocketTimeout
-from foreverbull_core.socket.client import SocketClient
-from foreverbull_core.socket.nanomsg import NanomsgSocket
 import socket
-from foreverbull_core.models.socket import SocketConfig, Request, Response
+
 import pynng
 import pytest
+
+from foreverbull_core.models.socket import Request, Response, SocketConfig
+from foreverbull_core.socket.client import SocketClient
+from foreverbull_core.socket.exceptions import SocketClosed, SocketTimeout
+from foreverbull_core.socket.nanomsg import NanomsgSocket
 
 
 @pytest.fixture(scope="function")
@@ -32,10 +34,9 @@ def local_replier():
 
 
 def test_default_configuration():
-    assert SocketConfig.schema()["required"] == ["socket_type"]
-    c = SocketConfig(socket_type="demo")
+    c = SocketConfig()
     expected = {
-        "socket_type": "demo",
+        "socket_type": "REPLIER",
         "host": socket.gethostbyname(socket.gethostname()),
         "port": 0,
         "listen": True,
@@ -61,7 +62,7 @@ def test_response_model():
 
 
 def test_socket_client(local_requester):
-    sc = SocketClient("127.0.0.1")
+    sc = SocketClient(SocketConfig(host="127.0.0.1"))
     lr = local_requester(sc._socket.url())
 
     expected = Request(task="demo", data={"demo": "data"})
@@ -107,4 +108,19 @@ def test_nanomsg_socket_recv_senc(local_requester):
     with pytest.raises(SocketClosed):
         sock.recv()
 
+    lr.close()
+
+
+def test_nanomsg_socket_dial(local_replier):
+    expected_url = "tcp://127.0.0.1:1337"
+    lr = local_replier(expected_url)
+
+    config = SocketConfig(socket_type="requester", host="127.0.0.1", port=1337, listen=False)
+    sock = NanomsgSocket(config)
+    assert sock.url() == expected_url
+
+    sock.close()
+
+    with pytest.raises(SocketClosed):
+        sock.send(b"hello")
     lr.close()

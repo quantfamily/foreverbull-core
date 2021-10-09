@@ -1,4 +1,5 @@
 import requests
+
 from foreverbull_core.http import RequestError
 
 

@@ -1,7 +1,7 @@
-from collections import namedtuple
-from foreverbull_core.models.socket import Response
-
 import logging
+from collections import namedtuple
+
+from foreverbull_core.models.socket import Response
 
 ROUTE = namedtuple("route", "func, route, model")
 
@@ -33,7 +33,7 @@ class MessageRouter:
         except Exception as exc:
             self._logger.error(f"Error calling task: {request.task}")
             self._logger.error(exc, exc_info=True)
-            return Response(task=request.task, error=str(exc))
+            return Response(task=request.task, error=repr(exc))
 
     def add_route(self, function, route, model=None):
         if route in self._routes:

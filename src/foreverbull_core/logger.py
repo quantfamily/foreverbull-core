@@ -19,6 +19,3 @@ class Logger:
             "root": {"level": "DEBUG", "handlers": ["console"]},
         }
         logging.config.dictConfig(self.default_config)
-
-    def configure(self, mode="base"):
-        logging.getLogger(mode)

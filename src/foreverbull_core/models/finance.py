@@ -1,6 +1,7 @@
-from typing import Optional, List
 from datetime import datetime
 from enum import IntEnum
+from typing import List, Optional
+
 from foreverbull_core.models.base import Base
 
 
@@ -25,6 +26,11 @@ class Asset(Base):
 
 
 class Price(Base):
+    """
+    :param date
+    :type date: datetime
+    """
+
     date: datetime
     last_traded: datetime
     price: float
