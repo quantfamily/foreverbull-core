@@ -17,7 +17,14 @@ class Parameter(Base):
     default: int
 
 
-class WorkerConfig(Base):
+class Instance(Base):
     session_id: str
     database: Optional[Database]
+    parameters: Optional[List[Parameter]]
+
+
+class Config(Base):
+    id: Optional[str]
+    service_id: Optional[str]
+    name: str
     parameters: Optional[List[Parameter]]

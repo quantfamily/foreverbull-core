@@ -20,3 +20,9 @@ class Base(BaseModel):
 
     def dump(self):
         return self.json().encode()
+
+    def update_fields(self, object):
+        for key, value in object.items():
+            if key in self.__fields__:
+                setattr(self, key, value)
+        return self

@@ -28,9 +28,6 @@ class Backtest:
             raise RequestError(f"get call /backtests/{backtest_id} gave bad return code: {rsp.status_code}")
         return rsp.json()
 
-    def update_backtest():
-        pass
-
     def delete_backtest(self, backtest_id):
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}")
         if not rsp.ok:
@@ -68,9 +65,6 @@ class Backtest:
                 f"get call /backtests/{backtest_id}/sessions/{session_id} gave bad return code: {rsp.status_code}"
             )
         return rsp.json()
-
-    def update_session():
-        pass
 
     def delete_session(self, backtest_id, session_id):
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
