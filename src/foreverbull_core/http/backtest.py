@@ -1,8 +1,10 @@
 from typing import List
+
 import requests
 
 from foreverbull_core.http import RequestError
-from foreverbull_core.models import  backtest
+from foreverbull_core.models import backtest
+
 
 class Backtest:
     def __init__(self, host, session=None) -> None:
@@ -66,17 +68,25 @@ class Backtest:
     def setup_session(self, backtest_id: str, session_id: str) -> None:
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/setup")
         if not rsp.ok:
-            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/setup gave bad return code: {rsp.status_code}")
+            code = rsp.status_code  # to mitigate line too long
+            raise RequestError(
+                f"post call /backtests/{backtest_id}/sessions/{session_id}/setup gave bad return code: {code}"
+            )
         return None
 
     def configure_session(self, backtest_id: str, session_id: str) -> None:
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/configure")
         if not rsp.ok:
-            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/configure gave bad return code: {rsp.status_code}")
+            code = rsp.status_code  # to mitigate line too long
+            raise RequestError(
+                f"post call /backtests/{backtest_id}/sessions/{session_id}/configure gave bad return code: {code}"
+            )
         return None
 
-    def run_session(self, backtest_id: str, session_id: str) -> None: 
+    def run_session(self, backtest_id: str, session_id: str) -> None:
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/run")
         if not rsp.ok:
-            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/run gave bad return code: {rsp.status_code}")
+            raise RequestError(
+                f"post call /backtests/{backtest_id}/sessions/{session_id}/run gave bad return code: {rsp.status_code}"
+            )
         return None

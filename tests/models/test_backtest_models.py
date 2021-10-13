@@ -1,4 +1,4 @@
-from foreverbull_core.models.backtest import BacktestConfig, BacktestResult, BacktestSockets, PeriodResult
+from foreverbull_core.models.backtest import EngineConfig, Period, Result, Sockets
 from foreverbull_core.models.socket import SocketConfig, SocketType
 
 
@@ -6,25 +6,25 @@ def test_info():
     main = SocketConfig(socket_type=SocketType.REQUESTER)
     feed = SocketConfig(socket_type=SocketType.PUBLISHER)
     broker = SocketConfig(socket_type=SocketType.REQUESTER)
-    info = BacktestSockets(main=main, feed=feed, broker=broker, running=True)
+    info = Sockets(main=main, feed=feed, broker=broker, running=True)
 
     dumped = info.dump()
-    loaded = BacktestSockets.load(dumped)
+    loaded = Sockets.load(dumped)
     assert info == loaded
 
 
 def test_config():
-    config = BacktestConfig(
+    config = EngineConfig(
         start_date="2017-01-01", end_date="2018-01-01", timezone="utc", benchmark="AAPL", assets=["TSLA", "AAPL"]
     )
 
     dumped = config.dump()
-    loaded = BacktestConfig.load(dumped)
+    loaded = EngineConfig.load(dumped)
     assert config == loaded
 
 
 def test_result():
-    period = PeriodResult(
+    period = Period(
         period_open=1483626660000,
         period_close=1483650000000,
         shorts_count=0,
@@ -59,7 +59,7 @@ def test_result():
         benchmark_volatility=0.0498830578,
         algorithm_period_return=-0.0000059305,
     )
-    result = BacktestResult(periods=[period])
+    result = Result(periods=[period])
     dumped = result.dump()
-    loaded = BacktestResult.load(dumped)
+    loaded = Result.load(dumped)
     assert loaded == result

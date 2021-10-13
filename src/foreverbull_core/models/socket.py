@@ -34,7 +34,6 @@ class SocketConfig(Base):
         return v
 
     def dict(self, *args, **kwargs):
-        print("here", flush=True)
         return {
             "socket_type": self.socket_type.name,
             "host": self.host,

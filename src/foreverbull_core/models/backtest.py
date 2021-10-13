@@ -1,6 +1,6 @@
 from typing import List, Optional
-from foreverbull_core.models import worker
 
+from foreverbull_core.models import worker
 from foreverbull_core.models.base import Base
 from foreverbull_core.models.socket import SocketConfig
 
@@ -9,6 +9,7 @@ class Execution(Base):
     running: bool
     stage: str
     error: Optional[str]
+
 
 class Session(Base):
     id: str
@@ -19,11 +20,13 @@ class Session(Base):
     run_automaticlly: bool
     execution: Optional[Execution]
 
+
 class Sockets(Base):
     main: SocketConfig
     feed: SocketConfig
     broker: SocketConfig
     running: bool
+
 
 class EngineConfig(Base):
     start_date: str
@@ -32,11 +35,13 @@ class EngineConfig(Base):
     benchmark: str
     assets: List[str]
 
+
 class Config(Base):
     id: Optional[str]
     service_id: str
     name: str
     config: EngineConfig
+
 
 class Period(Base):
     period_open: str

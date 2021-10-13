@@ -4,6 +4,7 @@ import requests_mock
 
 from foreverbull_core.http import RequestError
 from foreverbull_core.http.service import Service
+from foreverbull_core.models import service
 
 
 @pytest.fixture(scope="function")
@@ -19,172 +20,117 @@ def service_session():
 
 
 def test_list_services(service_session):
-    service, adapter = service_session()
+    service_api, adapter = service_session()
     adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services", json=[])
-    assert service.list_services() == []
+    assert service_api.list() == []
 
 
 def test_list_services_negative(service_session):
-    service, adapter = service_session()
+    service_api, adapter = service_session()
     adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services", status_code=500)
 
     with pytest.raises(RequestError, match="get call /services gave bad return code: 500"):
-        service.list_services()
+        service_api.list()
 
 
 def test_create_service(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services", json={"id": 1})
-    assert service.create_service({}) == {"id": 1}
+    service_api, adapter = service_session()
+    stored = service.Service(
+        id="service_id", name="demo_service", image="service_image", type=service.ServiceType.WORKER
+    )
+    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services", json=stored.dict())
+    assert service_api.create(stored) == stored
 
 
 def test_create_service_negative(service_session):
-    service, adapter = service_session()
+    service_api, adapter = service_session()
+    stored = service.Service(
+        id="service_id", name="demo_service", image="service_image", type=service.ServiceType.WORKER
+    )
     adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services", status_code=500)
 
     with pytest.raises(RequestError, match="post call /services gave bad return code: 500"):
-        service.create_service({})
+        service_api.create(stored)
 
 
 def test_get_service(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1", json={"id": 1})
-    assert service.get_service(1) == {"id": 1}
+    service_api, adapter = service_session()
+    stored = service.Service(
+        id="service_id", name="demo_service", image="service_image", type=service.ServiceType.WORKER
+    )
+
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/service_id", json=stored.dict())
+    assert service_api.get("service_id") == stored
 
 
 def test_get_service_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1", status_code=500)
+    service_api, adapter = service_session()
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/service_id", status_code=500)
 
-    with pytest.raises(RequestError, match="get call /services/1 gave bad return code: 500"):
-        service.get_service(1)
+    with pytest.raises(RequestError, match="get call /services/service_id gave bad return code: 500"):
+        service_api.get("service_id")
 
 
 def test_delete_service(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/1")
-    assert service.delete_service(1) is True
+    service_api, adapter = service_session()
+    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/service_id")
+    assert service_api.delete("service_id") is None
 
 
 def test_delete_service_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/1", status_code=500)
+    service_api, adapter = service_session()
+    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/service_id", status_code=500)
 
-    with pytest.raises(RequestError, match="delete call /services/1 gave bad return code: 500"):
-        service.delete_service(1)
+    with pytest.raises(RequestError, match="delete call /services/service_id gave bad return code: 500"):
+        service_api.delete("service_id")
 
 
 def test_list_instances(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1/instances", json=[])
-    assert service.list_instances(1) == []
+    service_api, adapter = service_session()
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/service_id/instances", json=[])
+    assert service_api.list_instances("service_id") == []
 
 
 def test_list_instances_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1/instances", status_code=500)
+    service_api, adapter = service_session()
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/s_id/instances", status_code=500)
 
-    with pytest.raises(RequestError, match="get call /services/1/instances gave bad return code: 500"):
-        service.list_instances(1)
-
-
-def test_create_instance(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services/1/instances", json={"id": 14})
-    assert service.create_instance(1, {}) == {"id": 14}
-
-
-def test_create_instance_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services/1/instances", status_code=500)
-
-    with pytest.raises(RequestError, match="post call /services/1/instances gave bad return code: 500"):
-        service.create_instance(1, {})
+    with pytest.raises(RequestError, match="get call /services/s_id/instances gave bad return code: 500"):
+        service_api.list_instances("s_id")
 
 
 def test_get_instance(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1/instances/1", json={"id": 14})
-    assert service.get_instance(1, 1) == {"id": 14}
+    service_api, adapter = service_session()
+    stored = service.Instance(
+        id="instance_id",
+        service_id="service_id",
+        session_id="session_id",
+        host="host",
+        port=1337,
+        listen=True,
+        online=True,
+    )
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id", json=stored.dict())
+    assert service_api.get_instance("s_id", "i_id") == stored
 
 
 def test_get_instance_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/1/instances/1", status_code=500)
+    service_api, adapter = service_session()
+    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id", status_code=500)
 
-    with pytest.raises(RequestError, match="get call /services/1/instances/1 gave bad return code: 500"):
-        service.get_instance(1, 1)
+    with pytest.raises(RequestError, match="get call /services/s_id/instances/i_id gave bad return code: 500"):
+        service_api.get_instance("s_id", "i_id")
 
 
 def test_delete_instance(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/1/instances/1")
-    assert service.delete_instance(1, 1) is True
+    service_api, adapter = service_session()
+    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id")
+    assert service_api.delete_instance("s_id", "i_id") is None
 
 
 def test_delete_instance_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/1/instances/1", status_code=500)
+    service_api, adapter = service_session()
+    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id", status_code=500)
 
-    with pytest.raises(RequestError, match="delete call /services/1/instances/1 gave bad return code: 500"):
-        service.delete_instance(1, 1)
-
-
-def test_list_containers(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/containers", json=[])
-    assert service.list_containers() == []
-
-
-def test_list_containers_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/containers", status_code=500)
-
-    with pytest.raises(RequestError, match="get call /services/containers gave bad return code: 500"):
-        service.list_containers()
-
-
-def test_create_container(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services/containers", json={})
-    assert service.create_container({}) == {}
-
-
-def test_create_container_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/services/containers", status_code=500)
-
-    with pytest.raises(RequestError, match="post call /services/containers gave bad return code: 500"):
-        service.create_container({})
-
-
-def test_get_container(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/containers/1", json={})
-    assert service.get_container(1) == {}
-
-
-def test_get_container_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("GET", "http://127.0.0.1:8080/api/v1/services/containers/1", status_code=500)
-
-    with pytest.raises(RequestError, match="get call /services/containers/1 gave bad return code: 500"):
-        service.get_container(1)
-
-
-def test_delete_container(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/containers/1", json={})
-    assert service.delete_container(1) is True
-
-
-def test_delete_container_negative(service_session):
-    service, adapter = service_session()
-    adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/containers/1", status_code=500)
-
-    with pytest.raises(RequestError, match="delete call /services/containers/1 gave bad return code: 500"):
-        service.delete_container(1)
-
-
-def test_HTTPClient():
-    pass
+    with pytest.raises(RequestError, match="delete call /services/s_id/instances/i_id gave bad return code: 500"):
+        service_api.delete_instance("s_id", "i_id")

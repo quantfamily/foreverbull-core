@@ -1,4 +1,11 @@
-from foreverbull_core.models.worker import Database, Parameter, WorkerConfig
+from foreverbull_core.models.worker import Config, Database, Instance, Parameter
+
+
+def test_config():
+    config = Config(id="worker_id", service_id="service_id", name="worker_name")
+    data = config.dump()
+    loaded = Config.load(data)
+    assert config == loaded
 
 
 def test_database():
@@ -33,7 +40,7 @@ def test_worker_configuration():
     )
     parameter1 = Parameter(key="test_key", value=1, default=11)
     parameter2 = Parameter(key="test_key2", value=2, default=22)
-    worker_config = WorkerConfig(session_id="test_id", database=database, parameters=[parameter1, parameter2])
+    worker_config = Instance(session_id="test_id", database=database, parameters=[parameter1, parameter2])
     data = worker_config.dump()
-    loaded = WorkerConfig.load(data)
+    loaded = Instance.load(data)
     assert worker_config == loaded
