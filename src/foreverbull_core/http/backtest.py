@@ -1,7 +1,8 @@
+from typing import List
 import requests
 
 from foreverbull_core.http import RequestError
-
+from foreverbull_core.models import  backtest
 
 class Backtest:
     def __init__(self, host, session=None) -> None:
@@ -10,77 +11,72 @@ class Backtest:
             session = requests.Session()
         self.session = session
 
-    def list_backtests(self):
+    def list(self) -> List[backtest.Config]:
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests")
         if not rsp.ok:
             raise RequestError(f"get call /backtests gave bad return code: {rsp.status_code}")
-        return rsp.json()
+        return [backtest.Config(**b) for b in rsp.json()]
 
-    def create_backtest(self, backtest):
-        rsp = self.session.post(f"http://{self.host}/api/v1/backtests", json=backtest)
+    def create(self, backtest: backtest.Config) -> backtest.Config:
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests", json=backtest.dict())
         if not rsp.ok:
             raise RequestError(f"post call /backtests gave bad return code: {rsp.status_code}")
-        return rsp.json()
+        return backtest.update_fields(rsp.json())
 
-    def get_backtest(self, backtest_id):
+    def get(self, backtest_id: str) -> backtest.Config:
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}")
         if not rsp.ok:
             raise RequestError(f"get call /backtests/{backtest_id} gave bad return code: {rsp.status_code}")
-        return rsp.json()
+        return backtest.Config(**rsp.json())
 
-    def delete_backtest(self, backtest_id):
+    def delete(self, backtest_id: str) -> None:
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}")
         if not rsp.ok:
             raise RequestError(f"delete call /backtests/{backtest_id} gave bad return code: {rsp.status_code}")
-        return True
+        return None
 
-    def list_backtest_services(self, backtest_id):
-        rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/services")
-        if not rsp.ok:
-            raise RequestError(f"get call /backtests/{backtest_id}/services gave bad return code: {rsp.status_code}")
-        return rsp.json()
-
-    def add_backtest_service(self, backtest_id, service):
-        rsp = self.session.put(f"http://{self.host}/api/v1/backtests/{backtest_id}/service", json=service)
-        if not rsp.ok:
-            raise RequestError(f"post call /backtests/{backtest_id}/services gave bad return code: {rsp.status_code}")
-        # return rsp.json
-
-    def list_sessions(self, backtest_id):
+    def list_sessions(self, backtest_id: str) -> List[backtest.Session]:
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions")
         if not rsp.ok:
             raise RequestError(f"get call /backtests/{backtest_id}/sessions gave bad return code: {rsp.status_code}")
-        return rsp.json()
+        return [backtest.Session(**s) for s in rsp.json()]
 
-    def create_session(self, backtest_id):
+    def create_session(self, backtest_id: str) -> backtest.Session:
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions")
         if not rsp.ok:
             raise RequestError(f"post call /backtests/{backtest_id}/sessions gave bad return code: {rsp.status_code}")
-        return rsp.json()
+        return backtest.Session(**rsp.json())
 
-    def get_session(self, backtest_id, session_id):
+    def get_session(self, backtest_id, session_id: str) -> backtest.Session:
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
         if not rsp.ok:
             raise RequestError(
                 f"get call /backtests/{backtest_id}/sessions/{session_id} gave bad return code: {rsp.status_code}"
             )
-        return rsp.json()
+        return backtest.Session(**rsp.json())
 
-    def delete_session(self, backtest_id, session_id):
+    def delete_session(self, backtest_id: str, session_id: str) -> None:
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
         if not rsp.ok:
             raise RequestError(
                 f"delete call /backtests/{backtest_id}/sessions/{session_id} gave bad return code: {rsp.status_code}"
             )
-        return True
+        return None
 
-    def run_session(self, backtest_id, session_id, run_workers):
-        rsp = self.session.post(
-            f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/run",
-            json=run_workers,
-        )
+    def setup_session(self, backtest_id: str, session_id: str) -> None:
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/setup")
         if not rsp.ok:
-            raise RequestError(
-                f"post call /backtests/{backtest_id}/sessions/{session_id}/run gave bad return code: {rsp.status_code}"
-            )
-        return rsp.json()
+            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/setup gave bad return code: {rsp.status_code}")
+        return None
+
+    def configure_session(self, backtest_id: str, session_id: str) -> None:
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/configure")
+        if not rsp.ok:
+            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/configure gave bad return code: {rsp.status_code}")
+        return None
+
+    def run_session(self, backtest_id: str, session_id: str) -> None: 
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/run")
+        if not rsp.ok:
+            raise RequestError(f"post call /backtests/{backtest_id}/sessions/{session_id}/run gave bad return code: {rsp.status_code}")
+        return None

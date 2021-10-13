@@ -1,29 +1,44 @@
 from typing import List, Optional
+from foreverbull_core.models import worker
 
 from foreverbull_core.models.base import Base
 from foreverbull_core.models.socket import SocketConfig
 
 
+class Execution(Base):
+    running: bool
+    stage: str
+    error: Optional[str]
+
 class Session(Base):
     id: str
+    backtest_id: str
+    worker_id: Optional[str]
+    worker_count: int
+    worker_parameters: Optional[List[worker.Parameter]]
+    run_automaticlly: bool
+    execution: Optional[Execution]
 
-
-class BacktestSockets(Base):
+class Sockets(Base):
     main: SocketConfig
     feed: SocketConfig
     broker: SocketConfig
     running: bool
 
-
-class BacktestConfig(Base):
+class EngineConfig(Base):
     start_date: str
     end_date: str
     timezone: str = "utc"
     benchmark: str
     assets: List[str]
 
+class Config(Base):
+    id: Optional[str]
+    service_id: str
+    name: str
+    config: EngineConfig
 
-class PeriodResult(Base):
+class Period(Base):
     period_open: str
     period_close: str
     shorts_count: Optional[int]
@@ -59,5 +74,5 @@ class PeriodResult(Base):
     algorithm_period_return: Optional[float]
 
 
-class BacktestResult(Base):
-    periods: List[PeriodResult]
+class Result(Base):
+    periods: List[Period]
