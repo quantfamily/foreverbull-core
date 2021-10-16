@@ -13,7 +13,7 @@ class Database(Base):
 
 class Parameter(Base):
     key: str
-    value: int
+    value: Optional[int]
     default: int
 
 
