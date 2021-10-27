@@ -3,7 +3,7 @@ from typing import List
 import requests
 
 from foreverbull_core.http import RequestError
-from foreverbull_core.models import backtest
+from foreverbull_core.models import backtest, service
 
 
 class Backtest:
@@ -43,11 +43,11 @@ class Backtest:
             raise RequestError(f"get call /backtests/{backtest_id}/sessions gave bad return code: {rsp.status_code}")
         return [backtest.Session(**s) for s in rsp.json()]
 
-    def create_session(self, backtest_id: str) -> backtest.Session:
-        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions")
+    def create_session(self, backtest_id: str, session: backtest.Session) -> backtest.Session:
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions", json=session.dict())
         if not rsp.ok:
             raise RequestError(f"post call /backtests/{backtest_id}/sessions gave bad return code: {rsp.status_code}")
-        return backtest.Session(**rsp.json())
+        return session.update_fields(rsp.json())
 
     def get_session(self, backtest_id, session_id: str) -> backtest.Session:
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
@@ -74,8 +74,10 @@ class Backtest:
             )
         return None
 
-    def configure_session(self, backtest_id: str, session_id: str) -> None:
-        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/configure")
+    def configure_session(self, backtest_id: str, session_id: str, raw_conn: service.RawConnection = None) -> None:
+        rsp = self.session.post(
+            f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/configure", json=raw_conn.dict()
+        )
         if not rsp.ok:
             code = rsp.status_code  # to mitigate line too long
             raise RequestError(

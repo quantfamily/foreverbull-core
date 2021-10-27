@@ -18,8 +18,6 @@ class NanomsgSocket:
         self._socket.send_timeout = self._config.send_timeout
         if self._config.listen and self._config.port == 0:
             # Pretty hacky way to find the port that OS randomly assigns when it's orginally set as 0
-            print(self._socket.listeners, flush=True)
-            print(dir(self._socket))
             self._config.port = int(self._socket.listeners[0].url.split(":")[-1])
 
     def url(self):

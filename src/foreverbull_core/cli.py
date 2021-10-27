@@ -18,14 +18,22 @@ class CLI:
         self.argparser.add_argument("--broker", default="http://127.0.0.1:8080/")
         core = self.argparser.add_subparsers(dest="core_option")
         service_arg = core.add_parser("service", help="create, list or delete  Services")
-        service = ServiceInput()
-        service.add_arguments(service_arg)
+        self.service = ServiceInput()
+        self.service.add_arguments(service_arg)
         backtest_arg = core.add_parser("backtest", help="create, list or delete backtest")
-        backtest = BacktestInput()
-        backtest.add_arguments(backtest_arg)
+        self.backtest = BacktestInput()
+        self.backtest.add_arguments(backtest_arg)
         worker_arg = core.add_parser("worker", help="create, list or delete workers")
-        worker = WorkerInput()
-        worker.add_arguments(worker_arg)
+        self.worker = WorkerInput()
+        self.worker.add_arguments(worker_arg)
+
+    def parse(self, args: argparse.Namespace):
+        if args.core_option == "service":
+            self.service.parse(args)
+        if args.core_option == "backtest":
+            self.backtest.parse(args)
+        if args.core_option == "worker":
+            self.worker.parse(args)
 
 
 class ServiceInput:
@@ -33,7 +41,7 @@ class ServiceInput:
         pass
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument("--broker-url", help="url of foreverbull broker", default="http://127.0.0.1:8080")
+        parser.add_argument("--broker-url", help="url of foreverbull broker", default="127.0.0.1:8080")
         subparser = parser.add_subparsers(dest="system_option", help="system options")
         create = subparser.add_parser("create", help="Create a new Service")
         create.add_argument("--name", required=True, help="Name of Service")
@@ -71,7 +79,7 @@ class BacktestInput:
         pass
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        parser.add_argument("--broker-url", help="url of foreverbull broker", default="http://127.0.0.1:8080")
+        parser.add_argument("--broker-url", help="url of foreverbull broker", default="127.0.0.1:8080")
         subparser = parser.add_subparsers(dest="backtest_option", help="backtest options")
         subparser.add_parser("list", help="list stored backtests")
         create = subparser.add_parser("create", help="create backtest")

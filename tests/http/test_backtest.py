@@ -101,16 +101,18 @@ def test_list_sessions_negative(backtest_session):
 
 def test_create_session(backtest_session):
     backtest, adapter = backtest_session()
+    to_create = Session(backtest_id="backtest_id", worker_count=1)
     created = Session(id="session_id", backtest_id="backtest_id", worker_count=1, run_automaticlly=False)
     adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/backtests/backtest_id/sessions", json=created.dict())
-    assert backtest.create_session("backtest_id") == created
+    assert backtest.create_session("backtest_id", to_create) == created
 
 
 def test_create_session_negative(backtest_session):
     backtest, adapter = backtest_session()
+    to_create = Session(backtest_id="backtest_id", worker_count=1)
     adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/backtests/backtest_id/sessions", status_code=500)
     with pytest.raises(RequestError, match="post call /backtests/backtest_id/sessions gave bad return code: 500"):
-        backtest.create_session("backtest_id")
+        backtest.create_session("backtest_id", to_create)
 
 
 def test_get_session(backtest_session):

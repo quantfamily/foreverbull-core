@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, NamedTuple
 
 from foreverbull_core.models.base import Base
 
@@ -28,3 +28,19 @@ class Config(Base):
     service_id: Optional[str]
     name: str
     parameters: Optional[List[Parameter]]
+
+
+class Run(NamedTuple):
+    broker_url: str = ""
+    local_host: str = ""
+
+
+class BacktestRun(Run):
+    service_id: str = ""
+    instance_id: str = ""
+
+
+class TestRun(NamedTuple):
+    broker_url: str = ""
+    local_host: str = ""
+    backtest_id: str = ""

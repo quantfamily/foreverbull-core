@@ -24,7 +24,6 @@ class Service:
         rsp = self.session.post(f"http://{self.host}/api/v1/services", json=service.dict())
         if not rsp.ok:
             raise RequestError(f"post call /services gave bad return code: {rsp.status_code}")
-        print(rsp.json())
         return service.update_fields(rsp.json())
 
     def get(self, service_id: str) -> service.Service:

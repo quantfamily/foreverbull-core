@@ -35,8 +35,13 @@ class Service(Base):
 class Instance(Base):
     id: str
     service_id: str
-    session_id: str
+    session_id: Optional[str]
+    host: Optional[str]
+    port: Optional[int]
+    listen: Optional[bool]
+    online: Optional[bool]
+
+
+class RawConnection(Base):
     host: str
     port: int
-    listen: bool
-    online: bool
