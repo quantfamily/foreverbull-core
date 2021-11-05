@@ -1,4 +1,4 @@
-name: Python package
+name: main
 
 on:
   push:
@@ -35,4 +35,9 @@ jobs:
         black --check -l 120 src tests
     - name: Test with pytest
       run: |
-        PYTHONPATH=src python -m pytest tests
+        PYTHONPATH=src python -m pytest tests --cov=./ --cov-report=xml
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+    
