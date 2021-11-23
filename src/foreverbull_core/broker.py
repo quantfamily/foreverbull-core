@@ -1,8 +1,8 @@
 from foreverbull_core.http import HTTPClient
+from foreverbull_core.models.backtest import Session
+from foreverbull_core.models.service import RawConnection
 from foreverbull_core.models.socket import SocketConfig
 from foreverbull_core.socket.client import SocketClient
-from foreverbull_core.models.service import RawConnection
-from foreverbull_core.models.backtest import Session
 
 
 class Broker:

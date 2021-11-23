@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from foreverbull_core.models import worker
@@ -44,8 +45,8 @@ class Config(Base):
 
 
 class Period(Base):
-    period_open: str
-    period_close: str
+    period_open: datetime
+    period_close: datetime
     shorts_count: Optional[int]
     pnl: Optional[float]
     long_value: Optional[float]
