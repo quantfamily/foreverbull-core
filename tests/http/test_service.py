@@ -71,6 +71,24 @@ def test_get_service_negative(service_session):
         service_api.get("service_id")
 
 
+def test_update_service(service_session):
+    service_api, adapter = service_session()
+    original = service.Service(id="service_id", name="orig_name", image="image123", type=service.ServiceType.WORKER)
+    updated = service.Service(id="service_id", name="new_name", image="image123", type=service.ServiceType.WORKER)
+    adapter.register_uri("PUT", "http://127.0.0.1:8080/api/v1/services/service_id", json=updated.dict())
+    recieved = service_api.update("service_id", original)
+    assert updated == recieved
+
+
+def test_update_service_negative(service_session):
+    service_api, adapter = service_session()
+    updated = service.Service(id="service_id", name="new_name", image="image123", type=service.ServiceType.WORKER)
+
+    adapter.register_uri("PUT", "http://127.0.0.1:8080/api/v1/services/service_id", status_code=404)
+    with pytest.raises(RequestError, match="put call /services/service_id gave bad return code: 404"):
+        service_api.update("service_id", updated)
+
+
 def test_delete_service(service_session):
     service_api, adapter = service_session()
     adapter.register_uri("DELETE", "http://127.0.0.1:8080/api/v1/services/service_id")
@@ -120,6 +138,41 @@ def test_get_instance_negative(service_session):
 
     with pytest.raises(RequestError, match="get call /services/s_id/instances/i_id gave bad return code: 500"):
         service_api.get_instance("s_id", "i_id")
+
+
+def test_update_instance(service_session):
+    service_api, adapter = service_session()
+    ins = service.Instance(
+        id="i_id",
+        service_id="s_id",
+        session_id="session_id",
+        host="host",
+        port=1337,
+        listen=True,
+        online=True,
+    )
+
+    patch_url = "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id?host=host&port=1337&online=True&listen=True"
+    adapter.register_uri("PATCH", patch_url, json=ins.dict())
+    service_api.update_instance(ins)
+
+
+def test_update_instance_negative(service_session):
+    service_api, adapter = service_session()
+    ins = service.Instance(
+        id="i_id",
+        service_id="s_id",
+        session_id="session_id",
+        host="host",
+        port=1337,
+        listen=True,
+        online=True,
+    )
+
+    patch_url = "http://127.0.0.1:8080/api/v1/services/s_id/instances/i_id?host=host&port=1337&online=True&listen=True"
+    adapter.register_uri("PATCH", patch_url, status_code=500)
+    with pytest.raises(RequestError):
+        service_api.update_instance(ins)
 
 
 def test_delete_instance(service_session):
