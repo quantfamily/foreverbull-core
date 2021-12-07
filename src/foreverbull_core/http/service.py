@@ -60,14 +60,12 @@ class Service:
 
     def update_instance(self, ins: service.Instance) -> service.Instance:
         rsp = self.session.patch(
-            f"http://{self.host}/api/v1/services/{ins.service_id}/instances/{ins.instance_id}",
+            f"http://{self.host}/api/v1/services/{ins.service_id}/instances/{ins.id}",
             params={"host": ins.host, "port": ins.port, "online": ins.online, "listen": ins.online},
         )
         if not rsp.ok:
             code = rsp.status_code  # to mitigate next line too long
-            raise RequestError(
-                f"get call /services/{ins.service_id}/instances/{ins.instance_id} gave bad return code: {code}"
-            )
+            raise RequestError(f"get call /services/{ins.service_id}/instances/{ins.id} gave bad return code: {code}")
         return ins.update_fields(rsp.json())
 
     def delete_instance(self, service_id: str, instance_id: str) -> None:
