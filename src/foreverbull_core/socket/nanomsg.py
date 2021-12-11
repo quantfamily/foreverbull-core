@@ -20,18 +20,18 @@ class NanomsgSocket:
             # Pretty hacky way to find the port that OS randomly assigns when it's orginally set as 0
             self._config.port = int(self._socket.listeners[0].url.split(":")[-1])
 
-    def url(self):
+    def url(self) -> str:
         if self._config.listen:
             return self._socket.listeners[0].url
         return self._socket.dialers[0].url
 
-    def send(self, data):
+    def send(self, data: bytes) -> None:
         try:
             return self._socket.send(data)
         except exceptions.Closed as exc:
             raise SocketClosed(exc)
 
-    def recv(self):
+    def recv(self) -> bytes:
         try:
             return self._socket.recv()
         except exceptions.Timeout as exc:
@@ -39,5 +39,5 @@ class NanomsgSocket:
         except exceptions.Closed as exc:
             raise SocketClosed(exc)
 
-    def close(self):
+    def close(self) -> None:
         return self._socket.close()
