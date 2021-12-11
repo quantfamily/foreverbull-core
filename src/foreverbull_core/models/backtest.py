@@ -16,7 +16,7 @@ class Session(Base):
     id: Optional[str]
     backtest_id: str
     worker_id: Optional[str]
-    worker_count: int
+    worker_count: Optional[int]
     worker_parameters: Optional[List[worker.Parameter]]
     run_automaticlly: bool = False
     execution: Optional[Execution]

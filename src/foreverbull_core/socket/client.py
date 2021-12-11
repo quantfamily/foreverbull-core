@@ -1,4 +1,4 @@
-from foreverbull_core.models.socket import Request, SocketConfig
+from foreverbull_core.models.socket import Request, Response, SocketConfig
 from foreverbull_core.socket.nanomsg import NanomsgSocket
 
 
@@ -10,7 +10,7 @@ class SocketClient:
     def url(self):
         return self._socket.url()
 
-    def send(self, message):
+    def send(self, message: Response) -> None:
         self._socket.send(message.dump())
 
     def recv(self):
