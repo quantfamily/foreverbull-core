@@ -86,6 +86,7 @@ def test_portfolio():
         cash=0,
         positions=[],
         start_date="2017-01-01",
+        current_date="2018-01-01",
         positions_value=1543.0,
         positions_exposure=0,
     )

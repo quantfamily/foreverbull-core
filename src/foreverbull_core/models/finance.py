@@ -125,11 +125,12 @@ class Portfolio(Base):
     cash: float
     positions: List[Position]
     start_date: str
+    current_date: str
     positions_value: float
     positions_exposure: float
 
     @classmethod
-    def from_backtest(cls, backtest):
+    def from_backtest(cls, backtest, current_date):
         positions = []
         for _, pos in backtest.positions.items():
             asset = Asset(
@@ -157,6 +158,7 @@ class Portfolio(Base):
             cash=backtest.cash,
             positions=positions,
             start_date=str(backtest.start_date),
+            current_date=str(current_date),
             positions_value=backtest.positions_value,
             positions_exposure=backtest.positions_exposure,
         )
