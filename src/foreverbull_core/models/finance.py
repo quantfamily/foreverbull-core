@@ -2,6 +2,8 @@ from datetime import datetime
 from enum import IntEnum
 from typing import List, Optional
 
+from pydantic import validator
+
 from foreverbull_core.models.base import Base
 
 
@@ -31,14 +33,26 @@ class Price(Base):
     :type date: datetime
     """
 
-    date: datetime
-    last_traded: datetime
+    date: str
+    last_traded: str
     price: float
     open: float
     close: float
     high: float
     low: float
     volume: int
+
+    @validator("date", pre=True)
+    def date_to_isodate(cls, v):
+        if type(v) is datetime:
+            return v.isoformat()
+        return v
+
+    @validator("last_traded", pre=True)
+    def last_traded_to_isodate(cls, v):
+        if type(v) is datetime:
+            return v.isoformat()
+        return v
 
 
 class EndOfDay(Price):
@@ -80,8 +94,8 @@ class Order(Base):
         self.commission = event.commission
         self.limit_price = event.limit
         self.stop_price = event.stop
-        self.current_date = str(event.dt)
-        self.created_date = str(event.created)
+        self.current_date = event.dt.isoformat()
+        self.created_date = event.created.isoformat()
         self.status = event.status
 
     @classmethod
@@ -102,8 +116,8 @@ class Order(Base):
             commission=order.commission,
             limit_price=order.limit,
             stop_price=order.stop,
-            current_date=str(order.dt),
-            created_date=str(order.created),
+            current_date=order.dt.isoformat(),
+            created_date=order.created.isoformat(),
             status=order.status,
         )
 
@@ -146,7 +160,7 @@ class Portfolio(Base):
                 amount=pos.amount,
                 cost_basis=pos.cost_basis,
                 last_sale_price=pos.last_sale_price,
-                last_sale_date=str(pos.last_sale_date),
+                last_sale_date=pos.last_sale_date.isoformat(),
             )
             positions.append(position)
         portfolio = Portfolio(
@@ -157,8 +171,8 @@ class Portfolio(Base):
             returns=backtest.returns,
             cash=backtest.cash,
             positions=positions,
-            start_date=str(backtest.start_date),
-            current_date=str(current_date),
+            start_date=backtest.start_date.isoformat(),
+            current_date=current_date.isoformat(),
             positions_value=backtest.positions_value,
             positions_exposure=backtest.positions_exposure,
         )
