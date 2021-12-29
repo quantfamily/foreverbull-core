@@ -62,7 +62,7 @@ class ServiceInput:
     def _create_service(self, args: argparse.Namespace):
         api = Service(args.broker_url)
         model = service.Service(name=args.name, image=args.image, type=args.type)
-        api.create(model)
+        print(api.create(model))
 
     def _list_services(self, args: argparse.Namespace):
         api = Service(args.broker_url)
@@ -71,7 +71,7 @@ class ServiceInput:
 
     def _delete_service(self, args: argparse.Namespace):
         api = Service(args.broker_url)
-        api.delete(args.id)
+        print(api.delete(args.id))
 
 
 class BacktestInput:
@@ -99,8 +99,8 @@ class BacktestInput:
 
     def _list_backtests(self, args: argparse.Namespace) -> None:
         api = Backtest(args.broker_url)
-        for stord_backtest in api.list():
-            print(stord_backtest)
+        for stored_backtest in api.list():
+            print(stored_backtest)
 
     def _create_backtest(self, args: argparse.Namespace) -> None:
         api = Backtest(args.broker_url)
@@ -108,11 +108,11 @@ class BacktestInput:
         with open(args.config, "r") as fr:
             config = json.loads(fr.read())
         model = backtest.Config(service_id=args.service_id, name=args.name, config=config)
-        api.create(model)
+        print(api.create(model))
 
     def _delete_backtest(self, args: argparse.Namespace) -> None:
         api = Backtest(args.broker_url)
-        api.delete(args.id)
+        print(api.delete(args.id))
 
 
 class WorkerInput:
@@ -156,8 +156,8 @@ class WorkerInput:
         if args.parameters:
             parameters = self._parse_worker_parameters(args.parameters)
         model = worker.Config(service_id=args.service_id, name=args.name, parameters=parameters)
-        api.create(model)
+        print(api.create(model))
 
     def _delete_worker(self, args: argparse.ArgumentParser) -> None:
         api = Worker(args.broker_url)
-        api.delete(args.id)
+        print(api.delete(args.id))
