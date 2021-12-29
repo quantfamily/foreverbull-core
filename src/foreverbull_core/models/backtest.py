@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
+from pydantic import validator
+
 from foreverbull_core.models import worker
 from foreverbull_core.models.base import Base
 from foreverbull_core.models.socket import SocketConfig
@@ -45,8 +47,8 @@ class Config(Base):
 
 
 class Period(Base):
-    period_open: datetime
-    period_close: datetime
+    period_open: str
+    period_close: str
     shorts_count: Optional[int]
     pnl: Optional[float]
     long_value: Optional[float]
@@ -78,6 +80,18 @@ class Period(Base):
     benchmark_period_return: Optional[float]
     benchmark_volatility: Optional[float]
     algorithm_period_return: Optional[float]
+
+    @validator("period_open", pre=True)
+    def period_open_to_isodate(cls, v):
+        if type(v) is datetime:
+            return v.isoformat()
+        return v
+
+    @validator("period_close", pre=True)
+    def period_close_to_isodate(cls, v):
+        if type(v) is datetime:
+            return v.isoformat()
+        return v
 
 
 class Result(Base):
