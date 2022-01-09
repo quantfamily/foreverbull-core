@@ -115,3 +115,12 @@ class Backtest:
             Text: {rsp.text}"""
             )
         return None
+
+    def stop_session(self, backtest_id: str, session_id: str) -> None:
+        rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/stop")
+        if not rsp.ok:
+            raise RequestError(
+                f"""post call /backtests/{backtest_id}/sessions/{session_id}/stop gave bad return code: {rsp.status_code}
+            Text: {rsp.text}"""
+            )
+        return None
