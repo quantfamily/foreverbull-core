@@ -14,10 +14,6 @@ class SocketType(enum.Enum):
     PUBLISHER = pynng.Pub0
     SUBSCRIBER = pynng.Sub0
 
-    def __str__(self):
-        # return str(self.value())
-        return "hegj"
-
 
 class SocketConfig(Base):
     socket_type: Union[SocketType, str] = SocketType.REPLIER
@@ -42,6 +38,9 @@ class SocketConfig(Base):
             "recv_timeout": self.recv_timeout,
             "send_timeout": self.send_timeout,
         }
+
+    def dump(self):
+        return self.dict()
 
 
 class Request(Base):

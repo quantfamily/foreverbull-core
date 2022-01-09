@@ -154,3 +154,16 @@ def test_run_session_negative(backtest_session):
     adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/backtests/b_id/sessions/s_id/run", status_code=500)
     with pytest.raises(RequestError, match="post call /backtests/b_id/sessions/s_id/run gave bad return code: 500"):
         backtest.run_session("b_id", "s_id")
+
+
+def test_stop_session(backtest_session):
+    backtest, adapter = backtest_session()
+    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/backtests/b_id/sessions/s_id/stop")
+    assert backtest.stop_session("b_id", "s_id") is None
+
+
+def test_stop_session_negative(backtest_session):
+    backtest, adapter = backtest_session()
+    adapter.register_uri("POST", "http://127.0.0.1:8080/api/v1/backtests/b_id/sessions/s_id/stop", status_code=500)
+    with pytest.raises(RequestError, match="post call /backtests/b_id/sessions/s_id/stop gave bad return code: 500"):
+        backtest.stop_session("b_id", "s_id")
