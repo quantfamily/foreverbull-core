@@ -1,8 +1,30 @@
-from pynng import exceptions
+from pynng import exceptions, nng
 
 from foreverbull_core.models.socket import SocketConfig
 
 from .exceptions import SocketClosed, SocketTimeout
+
+
+class NanomsgContextSocket:
+    def __init__(self, context_socket: nng.Context):
+        self._context_socket = context_socket
+
+    def send(self, data: bytes) -> None:
+        try:
+            return self._context_socket.send(data)
+        except exceptions.Closed as exc:
+            raise SocketClosed(exc)
+
+    def recv(self) -> bytes:
+        try:
+            return self._context_socket.recv()
+        except exceptions.Timeout as exc:
+            raise SocketTimeout(exc)
+        except exceptions.Closed as exc:
+            raise SocketClosed(exc)
+
+    def close(self) -> None:
+        return self._context_socket.close()
 
 
 class NanomsgSocket:
@@ -41,3 +63,6 @@ class NanomsgSocket:
 
     def close(self) -> None:
         return self._socket.close()
+
+    def new_context(self) -> NanomsgContextSocket:
+        return NanomsgContextSocket(self._socket.new_context())

@@ -1,5 +1,5 @@
 from foreverbull_core.models.socket import Request, Response, SocketConfig
-from foreverbull_core.socket.nanomsg import NanomsgSocket
+from foreverbull_core.socket.nanomsg import NanomsgContextSocket, NanomsgSocket
 
 
 class SocketClient:
@@ -19,3 +19,6 @@ class SocketClient:
 
     def close(self):
         self._socket.close()
+
+    def new_context(self) -> NanomsgContextSocket:
+        return NanomsgContextSocket(self._socket.new_context())

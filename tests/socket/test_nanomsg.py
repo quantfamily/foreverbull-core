@@ -124,3 +124,45 @@ def test_nanomsg_socket_dial(local_replier):
     with pytest.raises(SocketClosed):
         sock.send(b"hello")
     lr.close()
+
+
+def test_context_socket():
+    rep_config = SocketConfig(socket_type="replier", host="127.0.0.1", port=1337, listen=True)
+    context_rep = NanomsgSocket(rep_config)
+
+    req_config = SocketConfig(socket_type="requester", host="127.0.0.1", port=1337, listen=False)
+    context_req = NanomsgSocket(req_config)
+
+    rep_socket = context_rep.new_context()
+    first_requester = context_req.new_context()
+    second_requester = context_req.new_context()
+    thind_requester = context_req.new_context()
+
+    first_requester.send(b"req from first")
+    second_requester.send(b"req from second")
+    thind_requester.send(b"req from third")
+
+    rsp = rep_socket.recv()
+    assert rsp == b"req from first"
+    rep_socket.send(b"rsp from first")
+    rsp = first_requester.recv()
+    assert rsp == b"rsp from first"
+
+    rsp = rep_socket.recv()
+    assert rsp == b"req from second"
+    rep_socket.send(b"rsp from second")
+    rsp = second_requester.recv()
+    assert rsp == b"rsp from second"
+
+    rsp = rep_socket.recv()
+    assert rsp == b"req from third"
+    rep_socket.send(b"rsp from third")
+    rsp = thind_requester.recv()
+    assert rsp == b"rsp from third"
+
+    rep_socket.close()
+    first_requester.close()
+    second_requester.close()
+    thind_requester.close()
+    context_rep.close()
+    context_req.close()
