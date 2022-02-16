@@ -166,3 +166,35 @@ def test_context_socket():
     thind_requester.close()
     context_rep.close()
     context_req.close()
+
+
+def test_context_socket_second():
+    rep_config = SocketConfig(socket_type="replier", host="127.0.0.1", port=1337, listen=True)
+    context_rep = NanomsgSocket(rep_config)
+
+    req_config = SocketConfig(socket_type="requester", host="127.0.0.1", port=1337, listen=False)
+    context_req = NanomsgSocket(req_config)
+
+    first_rep = context_rep.new_context()
+    second_rep = context_rep.new_context()
+    first_req = context_req.new_context()
+    second_req = context_req.new_context()
+
+    first_req.send(b"first req")
+    second_req.send(b"second req")
+
+    assert first_rep.recv() == b"first req"
+    assert second_rep.recv() == b"second req"
+
+    second_rep.send(b"second rep")
+    first_rep.send(b"first rep")
+
+    assert first_req.recv() == b"first rep"
+    assert second_req.recv() == b"second rep"
+
+    first_rep.close()
+    second_rep.close()
+    first_req.close()
+    second_req.close()
+    context_rep.close()
+    context_req.close()
