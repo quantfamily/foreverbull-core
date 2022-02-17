@@ -1,5 +1,20 @@
 from foreverbull_core.models.socket import Request, Response, SocketConfig
-from foreverbull_core.socket.nanomsg import NanomsgSocket
+from foreverbull_core.socket.nanomsg import NanomsgContextSocket, NanomsgSocket
+
+
+class ContextClient:
+    def __init__(self, context_socket: NanomsgContextSocket):
+        self._context_socket = context_socket
+
+    def send(self, message: Response) -> None:
+        self._context_socket.send(message.dump())
+
+    def recv(self):
+        data = self._context_socket.recv()
+        return Request.load(data)
+
+    def close(self):
+        self._context_socket.close()
 
 
 class SocketClient:
@@ -19,3 +34,6 @@ class SocketClient:
 
     def close(self):
         self._socket.close()
+
+    def new_context(self) -> ContextClient:
+        return ContextClient(NanomsgContextSocket(self._socket.new_context()))
