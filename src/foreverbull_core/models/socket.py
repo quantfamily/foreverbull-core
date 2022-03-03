@@ -16,6 +16,19 @@ class SocketType(enum.Enum):
 
 
 class SocketConfig(Base):
+    """_summary_
+
+    Args:
+        socket_type (SocketType): Union[SocketType, str] = SocketType.REPLIER
+        host (str): str = socket.gethostbyname(socket.gethostname())
+        port (int): int = 0
+        listen (bool): bool = True
+        recv_timeout (int): int = 5000
+        send_timeout (int): int = 5000
+
+    Returns:
+        SocketConfig: _description_
+    """
     socket_type: Union[SocketType, str] = SocketType.REPLIER
     host: str = socket.gethostbyname(socket.gethostname())
     port: int = 0
@@ -44,11 +57,30 @@ class SocketConfig(Base):
 
 
 class Request(Base):
+    """_summary_
+
+    Args:
+        task (str): str
+        data (dict, optional): Optional[dict] = None
+
+    Returns:
+        Request: request
+    """
     task: str
     data: Optional[dict] = None
 
 
 class Response(Base):
+    """_summary_
+
+    Args:
+        task (str): str
+        error (str, optional): Optional[str] = None
+        data (dict, optional): Optional[dict] = None
+    
+    Returns:
+        Response: response
+    """
     task: str
     error: Optional[str] = None
     data: Optional[dict] = None

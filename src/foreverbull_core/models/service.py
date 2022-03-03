@@ -12,6 +12,17 @@ class ServiceType(enum.Enum):
 
 
 class Service(Base):
+    """_summary_
+
+    Args:
+        id (str, optional): Optional[str]
+        name (str): str
+        image (str): str
+        type (ServiceType): ServiceType
+
+    Returns:
+        Service: _description_
+    """
     id: Optional[str]
     name: str
     image: str
@@ -33,6 +44,20 @@ class Service(Base):
 
 
 class Instance(Base):
+    """_summary_
+
+    Args:
+        id (str): str
+        service_id (str): str
+        session_id (str, optional): Optional[str]
+        host (str, optional): Optional[str]
+        port (int, optional): Optional[int]
+        listen (bool, optional): Optional[bool]
+        online (bool, optional): Optional[bool]
+    
+    Returns:
+        Instance: instance
+    """
     id: str
     service_id: str
     session_id: Optional[str]
@@ -43,5 +68,14 @@ class Instance(Base):
 
 
 class RawConnection(Base):
+    """_summary_
+
+    Args:
+        host (str): str
+        port (int): int
+
+    Returns:
+        RawConnection: raw
+    """
     host: str
     port: int
