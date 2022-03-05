@@ -1,4 +1,0 @@
-Worker
-======
-
-This is worker

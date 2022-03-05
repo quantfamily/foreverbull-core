@@ -1,4 +1,0 @@
-Finance
-=======
-
-This is finance
