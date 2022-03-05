@@ -62,31 +62,31 @@ def test_context_client_in_thread():
         context_socket.recv()
         context_socket.send((Response(task=return_string)))
 
-    context_socket = context_replier.new_context()
+    rep1 = context_replier.new_context()
     t1 = Thread(
         target=listen_on_context,
         args=(
-            context_socket,
+            rep1,
             "from first",
         ),
     )
     t1.start()
 
-    context_socket = context_replier.new_context()
+    rep2 = context_replier.new_context()
     t2 = Thread(
         target=listen_on_context,
         args=(
-            context_socket,
+            rep2,
             "from second",
         ),
     )
     t2.start()
 
-    context_socket = context_replier.new_context()
+    rep3 = context_replier.new_context()
     t3 = Thread(
         target=listen_on_context,
         args=(
-            context_socket,
+            rep3,
             "from third",
         ),
     )
@@ -104,10 +104,19 @@ def test_context_client_in_thread():
     from_second = req2.recv()
     from_third = req3.recv()
 
+    req1.close()
+    req2.close()
+    req3.close()
+    rep1.close()
+    rep2.close()
+    rep3.close()
+    context_requester.close()
+    context_replier.close()
+
     t1.join()
     t2.join()
     t3.join()
 
     assert from_first.task == "from first"
-    assert from_second.task == "from first"
-    assert from_third.task == "from first"
+    assert from_second.task == "from second"
+    assert from_third.task == "from third"
