@@ -1,5 +1,6 @@
 import logging
 from collections import namedtuple
+from typing import Callable
 
 import pydantic
 
@@ -45,13 +46,14 @@ class MessageRouter:
             self._logger.error(exc, exc_info=True)
             return Response(task=request.task, error=repr(exc))
 
-    def add_route(self, function: function, route: str, model: pydantic.BaseModel=None):
+    def add_route(self, function: Callable, route: str, model: pydantic.BaseModel = None):
         """Add a route to the local _routes with a name<->function pair.
 
         Args:
             function (function): Function call shall be called on a route
             route (str): Name task which should call a specific function
-            model (pydantic.BaseModel, optional): In case we shall include some data to the function being called. Defaults to None.
+            model (pydantic.BaseModel, optional): In case we shall include some data to the function being called.
+            Defaults to None.
 
         Raises:
             TaskAlreadyExists: The task we are trying to add is already registed

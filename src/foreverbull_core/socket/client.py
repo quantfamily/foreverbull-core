@@ -4,11 +4,12 @@ from foreverbull_core.socket.nanomsg import NanomsgContextSocket, NanomsgSocket
 
 class ContextClient:
     def __init__(self, context_socket: NanomsgContextSocket):
-        """Context client is sub socket of SocketClient that will keep track of who sends the request 
+        """Context client is sub socket of SocketClient that will keep track of who sends the request
         to make sure respone will go to the same peer.
 
         Args:
-            context_socket (NanomsgContextSocket): The context_socket to be used for communication, uses same Port/int as socket itself.
+            context_socket (NanomsgContextSocket): The context_socket to be used for communication,
+            uses same Port/int as socket itself.
         """
         self._context_socket = context_socket
 
@@ -24,7 +25,7 @@ class ContextClient:
         """Waits until incoming bytes has been received and load it into a Request Model
 
         Returns:
-            Request: Request that has been received  
+            Request: Request that has been received
         """
         data = self._context_socket.recv()
         return Request.load(data)
@@ -64,7 +65,7 @@ class SocketClient:
         """Waits until incoming bytes has been received and load it into a Request Model
 
         Returns:
-            Request: Request that has been received  
+            Request: Request that has been received
         """
         data = self._socket.recv()
         return Request.load(data)
@@ -74,7 +75,8 @@ class SocketClient:
         self._socket.close()
 
     def new_context(self) -> ContextClient:
-        """Returns a new context client for this socket that is intended when you might have several incoming connections at same time.
+        """Returns a new context client for this socket that is intended when you might have several
+        incoming connections at same time.
         Each context will know where the request came from and reply to the proper peer.
 
         Returns:

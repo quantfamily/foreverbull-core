@@ -23,6 +23,7 @@ class Service(Base):
     Returns:
         Service: _description_
     """
+
     id: Optional[str]
     name: str
     image: str
@@ -54,10 +55,11 @@ class Instance(Base):
         port (int, optional): Optional[int]
         listen (bool, optional): Optional[bool]
         online (bool, optional): Optional[bool]
-    
+
     Returns:
         Instance: instance
     """
+
     id: str
     service_id: str
     session_id: Optional[str]
@@ -77,5 +79,6 @@ class RawConnection(Base):
     Returns:
         RawConnection: raw
     """
+
     host: str
     port: int

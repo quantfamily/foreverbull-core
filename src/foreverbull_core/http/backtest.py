@@ -27,7 +27,7 @@ class Backtest:
 
         Returns:
             List[backtest.Config]: List of configuration for Backtests stored on Server
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests")
         if not rsp.ok:
             raise RequestError(
@@ -47,7 +47,7 @@ class Backtest:
 
         Returns:
             backtest.Config: Stored, newly created, backtest.
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests", json=backtest.dict())
         if not rsp.ok:
             raise RequestError(
@@ -67,7 +67,7 @@ class Backtest:
 
         Returns:
             backtest.Config: Full configuration of the stored Backtest
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}")
         if not rsp.ok:
             raise RequestError(
@@ -86,8 +86,8 @@ class Backtest:
             RequestError: In case response code is not OK
 
         Returns:
-            None: 
-        """        
+            None:
+        """
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}")
         if not rsp.ok:
             raise RequestError(
@@ -107,7 +107,7 @@ class Backtest:
 
         Returns:
             List[backtest.Session]: List of Sessions for that backtest
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions")
         if not rsp.ok:
             raise RequestError(
@@ -128,7 +128,7 @@ class Backtest:
 
         Returns:
             backtest.Session: Created and stored Session
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions", json=session.dict())
         if not rsp.ok:
             raise RequestError(
@@ -149,7 +149,7 @@ class Backtest:
 
         Returns:
             backtest.Session: Stored backtest session
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
         if not rsp.ok:
             raise RequestError(
@@ -170,7 +170,7 @@ class Backtest:
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.delete(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}")
         if not rsp.ok:
             raise RequestError(
@@ -180,7 +180,7 @@ class Backtest:
         return None
 
     def setup_session(self, backtest_id: str, session_id: str) -> None:
-        """Manually setup the backtest session execution 
+        """Manually setup the backtest session execution
 
         Args:
             backtest_id (str): Identifier of the backtest
@@ -191,7 +191,7 @@ class Backtest:
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/setup")
         if not rsp.ok:
             code = rsp.status_code  # to mitigate line too long
@@ -213,7 +213,7 @@ class Backtest:
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.post(
             f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/configure", json=raw_conn.dict()
         )
@@ -237,7 +237,7 @@ class Backtest:
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/run")
         if not rsp.ok:
             raise RequestError(
@@ -258,7 +258,7 @@ class Backtest:
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/backtests/{backtest_id}/sessions/{session_id}/stop")
         if not rsp.ok:
             raise RequestError(

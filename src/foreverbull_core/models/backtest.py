@@ -16,9 +16,10 @@ class Execution(Base):
         stage (str): Which stage the execution is running in
         error (str, optional): Error- text if there has been a issue
 
-    Returns: 
+    Returns:
         Execution: Execution pydantic object
     """
+
     running: bool
     stage: str
     error: Optional[str]
@@ -28,7 +29,7 @@ class Session(Base):
     """_summary_
 
     Args:
-        id (str, optional): Session identifier 
+        id (str, optional): Session identifier
         backtest_id (str): Identified of the backtest which session is running of
         worker_id (str, optional): Attached identified of a Worker used
         worker_count (int, optional): Number of worker that shall run in parallel
@@ -39,6 +40,7 @@ class Session(Base):
     Returns:
         Session: Session pydantic object
     """
+
     id: Optional[str]
     backtest_id: str
     worker_id: Optional[str]
@@ -56,10 +58,11 @@ class Sockets(Base):
         feed (SocketConfig): Configuration for the backtest engine feed socket
         broker (SocketConfig): Configuration for the backtest engine broker socket
         running (bool): If the engine is running or not
-    
+
     Returns:
         Sockets: Pydantic Sockets object
     """
+
     main: SocketConfig
     feed: SocketConfig
     broker: SocketConfig
@@ -75,10 +78,11 @@ class EngineConfig(Base):
         timezone (str): Which timezone the backtest engine should simulate as
         benchmark (str): Index or asset that should be benchmark for performance
         assets (List[str]): Number of asset symbols that should be included in the simulation
-    
+
     Returns:
-        EngineConfig: 
+        EngineConfig:
     """
+
     start_date: str
     end_date: str
     timezone: str = "utc"
@@ -95,9 +99,10 @@ class Config(Base):
         name (str): Name of the backtest
         config (EngineConfig): Configuration used for the backtest when running sessions.
 
-    Returns: 
-        Config: 
+    Returns:
+        Config:
     """
+
     id: Optional[str]
     service_id: str
     name: str
@@ -145,6 +150,7 @@ class Period(Base):
     Returns:
         Period: _description_
     """
+
     period_open: str
     period_close: str
     shorts_count: Optional[int]
@@ -197,8 +203,9 @@ class Result(Base):
 
     Args:
         periods (List[Period]): _description_
-    
+
     Returns:
         Result:
     """
+
     periods: List[Period]

@@ -24,7 +24,7 @@ class NanomsgContextSocket:
             SocketClosed: In case the we are trying to send over a closed socket
 
         Returns:
-            None: 
+            None:
         """
         try:
             return self._context_socket.send(data)

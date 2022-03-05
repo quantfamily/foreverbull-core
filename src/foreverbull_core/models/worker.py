@@ -16,6 +16,7 @@ class Database(Base):
     Returns:
         Database: database
     """
+
     user: str
     password: str
     netloc: str
@@ -34,6 +35,7 @@ class Parameter(Base):
     Returns:
         Parameter: parameter
     """
+
     key: str
     value: Optional[int]
     default: int
@@ -50,6 +52,7 @@ class Instance(Base):
     Returns:
         Instance: instance
     """
+
     session_id: str
     database: Optional[Database]
     parameters: Optional[List[Parameter]]
@@ -63,10 +66,11 @@ class Config(Base):
         service_id (str, optional): Optional[str]
         name (str): str
         parameters (List[Parameter], optional): Optional[List[Parameter]]
-    
+
     Returns:
         Config: config
     """
+
     id: Optional[str]
     service_id: Optional[str]
     name: str
@@ -83,6 +87,7 @@ class Run(NamedTuple):
     Returns:
         Run: run
     """
+
     broker_url: str = ""
     local_host: str = ""
 
@@ -92,11 +97,12 @@ class BacktestRun(Run):
 
     Args:
         service_id (str): str = ""
-        instance_id (str): str = 
-    
+        instance_id (str): str =
+
     Returns:
-        BacktestRun: 
+        BacktestRun:
     """
+
     service_id: str = ""
     instance_id: str = ""
 
@@ -107,6 +113,7 @@ class TestRun(NamedTuple):
     Args:
         NamedTuple (_type_): _description_
     """
+
     broker_url: str = ""
     local_host: str = ""
     backtest_id: str = ""

@@ -14,13 +14,11 @@ This is very far from completed - pretty much not started even
 
 .. toctree::
    :maxdepth: 2
-   :includehidden:
 
-   broker/index
-   models/index
-   socket/index   
-
-
+   models
+   http
+   socket
+   
 
 Indices and tables
 ==================

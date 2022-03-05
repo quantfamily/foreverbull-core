@@ -29,6 +29,7 @@ class SocketConfig(Base):
     Returns:
         SocketConfig: _description_
     """
+
     socket_type: Union[SocketType, str] = SocketType.REPLIER
     host: str = socket.gethostbyname(socket.gethostname())
     port: int = 0
@@ -66,6 +67,7 @@ class Request(Base):
     Returns:
         Request: request
     """
+
     task: str
     data: Optional[dict] = None
 
@@ -77,10 +79,11 @@ class Response(Base):
         task (str): str
         error (str, optional): Optional[str] = None
         data (dict, optional): Optional[dict] = None
-    
+
     Returns:
         Response: response
     """
+
     task: str
     error: Optional[str] = None
     data: Optional[dict] = None

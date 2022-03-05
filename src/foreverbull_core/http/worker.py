@@ -8,12 +8,12 @@ from foreverbull_core.models import worker
 
 class Worker:
     def __init__(self, host, session=None) -> None:
-        """Initializes Worker endpoint client ID 
+        """Initializes Worker endpoint client ID
 
         Args:
             host (str): Host address to the Foreverbull backend server. IP:PORT Format
             session (requests.Session, optional): Use pre defined session instead of creating new. Defaults to None.
-        """        
+        """
         self.host = host
         if session is None:
             session = requests.Session()
@@ -27,7 +27,7 @@ class Worker:
 
         Returns:
             List[worker.Config]: List of workers from the Server
-        """      
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/workers")
         if not rsp.ok:
             raise RequestError(
@@ -47,7 +47,7 @@ class Worker:
 
         Returns:
             worker.Config: Stored worker from the server
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/workers", json=worker.json())
         if not rsp.ok:
             raise RequestError(
@@ -67,7 +67,7 @@ class Worker:
 
         Returns:
             worker.Config: Stored worker from the Server
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/workers/{worker_id}")
         if not rsp.ok:
             raise RequestError(
@@ -88,7 +88,7 @@ class Worker:
 
         Returns:
             worker.Config: Updated worker from the Server
-        """        
+        """
         rsp = self.session.put(f"http://{self.host}/api/v1/workers/{worker_id}", json=worker.json())
         if not rsp.ok:
             raise RequestError(
@@ -107,8 +107,8 @@ class Worker:
             RequestError: In case response code is not OK
 
         Returns:
-            None: 
-        """        
+            None:
+        """
         rsp = self.session.delete(f"http://{self.host}/api/v1/workers/{worker_id}")
         if not rsp.ok:
             raise RequestError(

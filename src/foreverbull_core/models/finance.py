@@ -9,7 +9,7 @@ from foreverbull_core.models.base import Base
 
 class Asset(Base):
     """Contains the information about a specific asset.
-    Symbol is required. 
+    Symbol is required.
     Given a correct symbol the backend shall be able to determinate the rest.
 
     Args:
@@ -23,6 +23,7 @@ class Asset(Base):
     Returns:
         Asset: Object contining the information about an Asset
     """
+
     sid: Optional[int]
     symbol: str
     asset_name: Optional[str]
@@ -110,6 +111,7 @@ class EndOfDay(Price):
     Returns:
         EndOfDay: Pydantic object containing period pricing
     """
+
     asset: Asset
 
 
@@ -142,6 +144,7 @@ class Order(Base):
     Returns:
         Order: Pydantic object containing order
     """
+
     id: Optional[str]
     asset: Optional[Asset]
     amount: Optional[int]
@@ -222,6 +225,7 @@ class Position(Base):
     Returns:
         Position:
     """
+
     asset: Asset
     amount: int
     cost_basis: float
@@ -248,6 +252,7 @@ class Portfolio(Base):
     Returns:
         Portfolio: _description_
     """
+
     cash_flow: float
     starting_cash: int
     portfolio_value: float

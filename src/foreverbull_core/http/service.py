@@ -28,7 +28,7 @@ class Service:
 
         Returns:
             List[service.Service]: List of Services stored on backend
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/services")
         if not rsp.ok:
             raise RequestError(
@@ -48,7 +48,7 @@ class Service:
 
         Returns:
             service.Service: Created service with Identifier set
-        """        
+        """
         rsp = self.session.post(f"http://{self.host}/api/v1/services", json=service.dict())
         if not rsp.ok:
             raise RequestError(
@@ -58,7 +58,7 @@ class Service:
         return service.update_fields(rsp.json())
 
     def get(self, service_id: str) -> service.Service:
-        """Get a specific Service based on a Identifier 
+        """Get a specific Service based on a Identifier
 
         Args:
             service_id (str): Identifier of the Service
@@ -68,7 +68,7 @@ class Service:
 
         Returns:
             service.Service: Stored service
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/services/{service_id}")
         if not rsp.ok:
             raise RequestError(
@@ -89,7 +89,7 @@ class Service:
 
         Returns:
             service.Service: Updated stored Service
-        """        
+        """
         rsp = self.session.put(f"http://{self.host}/api/v1/services/{service_id}", json=service.dict())
         if not rsp.ok:
             raise RequestError(
@@ -108,8 +108,8 @@ class Service:
             RequestError: In case response code is not OK
 
         Returns:
-            None: 
-        """        
+            None:
+        """
         rsp = self.session.delete(f"http://{self.host}/api/v1/services/{service_id}")
         if not rsp.ok:
             raise RequestError(
@@ -129,7 +129,7 @@ class Service:
 
         Returns:
             List[service.Instance]: List of stored service instances
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/services/{service_id}/instances")
         if not rsp.ok:
             raise RequestError(
@@ -150,7 +150,7 @@ class Service:
 
         Returns:
             service.Instance: Stored Service Instance from the Server
-        """        
+        """
         rsp = self.session.get(f"http://{self.host}/api/v1/services/{service_id}/instances/{instance_id}")
         if not rsp.ok:
             raise RequestError(
@@ -170,7 +170,7 @@ class Service:
 
         Returns:
             service.Instance: Updated Service Instance
-        """        
+        """
         rsp = self.session.patch(
             f"http://{self.host}/api/v1/services/{ins.service_id}/instances/{ins.id}",
             params={"host": ins.host, "port": ins.port, "online": ins.online, "listen": ins.online},
@@ -189,13 +189,13 @@ class Service:
         Args:
             service_id (str): Service Identifier to the Instance
             instance_id (str): Instance Identifier
-        
+
         Raises:
             RequestError: In case response code is not OK
 
         Returns:
             None:
-        """        
+        """
         rsp = self.session.delete(f"http://{self.host}/api/v1/services/{service_id}/instances/{instance_id}")
         if not rsp.ok:
             raise RequestError(
