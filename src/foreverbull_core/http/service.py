@@ -3,6 +3,7 @@ from typing import List
 import requests
 
 from foreverbull_core.models import service
+from foreverbull_core.models.socket import SocketConfig
 
 from .exceptions import RequestError
 
@@ -159,7 +160,7 @@ class Service:
             )
         return service.Instance(**rsp.json())
 
-    def update_instance(self, ins: service.Instance) -> service.Instance:
+    def update_instance(self, service_id: str, container_id: str, socket: SocketConfig) -> service.Instance:
         """Update a stored Service Instance
 
         Args:
@@ -172,7 +173,7 @@ class Service:
             service.Instance: Updated Service Instance
         """
         rsp = self.session.patch(
-            f"http://{self.host}/api/v1/services/{ins.service_id}/instances/{ins.id}",
+            f"http://{self.host}/api/v1/services/{service_id}/instances/{container_id}",
             params={"host": ins.host, "port": ins.port, "online": ins.online, "listen": ins.online},
         )
         if not rsp.ok:

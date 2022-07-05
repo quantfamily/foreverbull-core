@@ -3,7 +3,7 @@ from typing import List
 import requests
 
 from foreverbull_core.http import RequestError
-from foreverbull_core.models import backtest, service
+from foreverbull_core.models import service
 
 
 class Backtest:
@@ -36,7 +36,7 @@ class Backtest:
             )
         return [backtest.Config(**b) for b in rsp.json()]
 
-    def create(self, backtest: backtest.Config) -> backtest.Config:
+    def create(self, backtest: dict) -> dict:
         """Creates and stores a new Backtest on the Server
 
         Args:
@@ -54,7 +54,7 @@ class Backtest:
                 f"""post call /backtests gave bad return code: {rsp.status_code}"
             Text: {rsp.text}"""
             )
-        return backtest.update_fields(rsp.json())
+        return rsp.json()
 
     def get(self, backtest_id: str) -> backtest.Config:
         """Retrieve a stored backtest based on backtest ID
@@ -74,7 +74,7 @@ class Backtest:
                 f"""get call /backtests/{backtest_id} gave bad return code: {rsp.status_code}
             Text: {rsp.text}"""
             )
-        return backtest.Config(**rsp.json())
+        return rsp.json()
 
     def delete(self, backtest_id: str) -> None:
         """Delete a stored backtest, based on backtest_id
