@@ -160,7 +160,7 @@ class Service:
             )
         return service.Instance(**rsp.json())
 
-    def update_instance(self, service_id: str, container_id: str, socket: SocketConfig) -> service.Instance:
+    def update_instance(self, service_id: str, container_id: str, socket: SocketConfig, online: bool) -> bool:
         """Update a stored Service Instance
 
         Args:
@@ -174,15 +174,15 @@ class Service:
         """
         rsp = self.session.patch(
             f"http://{self.host}/api/v1/services/{service_id}/instances/{container_id}",
-            params={"host": ins.host, "port": ins.port, "online": ins.online, "listen": ins.online},
+            params={**socket.dict(), "online": online},
         )
         if not rsp.ok:
             code = rsp.status_code  # to mitigate next line too long
             raise RequestError(
-                f"""get call /services/{ins.service_id}/instances/{ins.id} gave bad return code: {code}
+                f"""get call /services/{service_id}/instances/{container_id} gave bad return code: {code}
             Text: {rsp.text}"""
             )
-        return ins.update_fields(rsp.json())
+        return True
 
     def delete_instance(self, service_id: str, instance_id: str) -> None:
         """Delete a stored Service Instance
