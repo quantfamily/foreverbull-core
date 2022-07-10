@@ -50,11 +50,9 @@ class Instance(Base):
     Args:
         id (str): str
         service_id (str): str
-        session_id (str, optional): Optional[str]
+        container_id (str, optional): Optional[str]
         host (str, optional): Optional[str]
         port (int, optional): Optional[int]
-        listen (bool, optional): Optional[bool]
-        online (bool, optional): Optional[bool]
 
     Returns:
         Instance: instance
@@ -62,7 +60,7 @@ class Instance(Base):
 
     id: str
     service_id: str
-    session_id: Optional[str]
+    container_id: Optional[str]
     host: Optional[str]
     port: Optional[int]
     listen: Optional[bool]
