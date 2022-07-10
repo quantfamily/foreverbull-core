@@ -19,7 +19,7 @@ class Service:
         self.host = host
         if session is None:
             session = requests.Session()
-        self.session = session
+        self.session: requests.Session = session
 
     def list(self) -> List[service.Service]:
         """List stored Services from the Server
@@ -172,9 +172,9 @@ class Service:
         Returns:
             service.Instance: Updated Service Instance
         """
-        rsp = self.session.patch(
+        rsp = self.session.put(
             f"http://{self.host}/api/v1/services/{service_id}/instances/{container_id}",
-            params={**socket.dict(), "online": online},
+            json={**socket.dict(), "online": online},
         )
         if not rsp.ok:
             code = rsp.status_code  # to mitigate next line too long
